@@ -19,6 +19,7 @@
 namespace spdlog {
 namespace details {
 
+// 阻塞队列：支持超时、数据满覆盖、数据丢弃等功能
 template <typename T>
 class mpmc_blocking_queue {
 public:
@@ -31,7 +32,7 @@ public:
     void enqueue(T &&item) {
         {
             std::unique_lock<std::mutex> lock(queue_mutex_);
-            pop_cv_.wait(lock, [this] { return !this->q_.full(); });
+            pop_cv_.wait(lock, [this] { return !this->q_.full(); }); // 队列未满，释放队列
             q_.push_back(std::move(item));
         }
         push_cv_.notify_one();

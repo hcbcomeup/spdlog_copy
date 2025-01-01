@@ -429,6 +429,7 @@ SPDLOG_INLINE bool is_color_terminal() SPDLOG_NOEXCEPT {
 
 // Determine if the terminal attached
 // Source: https://github.com/agauniyal/rang/
+// 判断文件描述符是否为终端设备
 SPDLOG_INLINE bool in_terminal(FILE *file) SPDLOG_NOEXCEPT {
 #ifdef _WIN32
     return ::_isatty(_fileno(file)) != 0;

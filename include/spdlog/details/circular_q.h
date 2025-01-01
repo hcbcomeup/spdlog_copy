@@ -12,11 +12,13 @@
 namespace spdlog {
 namespace details {
 template <typename T>
+
+// 循环队列
 class circular_q {
     size_t max_items_ = 0;
     typename std::vector<T>::size_type head_ = 0;
     typename std::vector<T>::size_type tail_ = 0;
-    size_t overrun_counter_ = 0;
+    size_t overrun_counter_ = 0; // 被覆盖的数据个数
     std::vector<T> v_;
 
 public:
@@ -42,6 +44,7 @@ public:
         return *this;
     }
 
+    // 循环队列，到头之后重新覆盖,tail_+1预留一个位置
     // push back, overrun (oldest) item if no room left
     void push_back(T &&item) {
         if (max_items_ > 0) {
@@ -82,6 +85,7 @@ public:
     // If there are no elements in the container, the behavior is undefined.
     void pop_front() { head_ = (head_ + 1) % max_items_; }
 
+    // 只有tail_ == head_==0
     bool empty() const { return tail_ == head_; }
 
     bool full() const {

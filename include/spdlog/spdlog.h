@@ -30,6 +30,7 @@ using default_factory = synchronous_factory;
 //
 // Example:
 //   spdlog::create<daily_file_sink_st>("logger_name", "dailylog_filename", 11, 59);
+// 支持自定义sink，创建不同风格的logger对象
 template <typename Sink, typename... SinkArgs>
 inline std::shared_ptr<spdlog::logger> create(std::string logger_name, SinkArgs &&...sink_args) {
     return default_factory::create<Sink>(std::move(logger_name),
@@ -52,6 +53,7 @@ SPDLOG_API void initialize_logger(std::shared_ptr<logger> logger);
 SPDLOG_API std::shared_ptr<logger> get(const std::string &name);
 
 // Set global formatter. Each sink in each logger will get a clone of this object
+// 全局设置：formatter
 SPDLOG_API void set_formatter(std::unique_ptr<spdlog::formatter> formatter);
 
 // Set global format string.
@@ -60,6 +62,7 @@ SPDLOG_API void set_pattern(std::string pattern,
                             pattern_time_type time_type = pattern_time_type::local);
 
 // enable global backtrace support
+// 全局设置：设置debug log日志的大小
 SPDLOG_API void enable_backtrace(size_t n_messages);
 
 // disable global backtrace support
@@ -127,6 +130,7 @@ SPDLOG_API void set_automatic_registration(bool automatic_registration);
 
 SPDLOG_API std::shared_ptr<spdlog::logger> default_logger();
 
+// 获取裸指针
 SPDLOG_API spdlog::logger *default_logger_raw();
 
 SPDLOG_API void set_default_logger(std::shared_ptr<spdlog::logger> default_logger);
@@ -140,6 +144,7 @@ SPDLOG_API void set_default_logger(std::shared_ptr<spdlog::logger> default_logge
 //   spdlog::apply_logger_env_levels(mylogger);
 SPDLOG_API void apply_logger_env_levels(std::shared_ptr<logger> logger);
 
+// 直接定义log
 template <typename... Args>
 inline void log(source_loc source,
                 level::level_enum lvl,
@@ -153,6 +158,7 @@ inline void log(level::level_enum lvl, format_string_t<Args...> fmt, Args &&...a
     default_logger_raw()->log(source_loc{}, lvl, fmt, std::forward<Args>(args)...);
 }
 
+// 支持trace->critical日志级别
 template <typename... Args>
 inline void trace(format_string_t<Args...> fmt, Args &&...args) {
     default_logger_raw()->trace(fmt, std::forward<Args>(args)...);
@@ -238,6 +244,7 @@ inline void critical(wformat_string_t<Args...> fmt, Args &&...args) {
 }
 #endif
 
+// 单参数类型的log定义
 template <typename T>
 inline void trace(const T &msg) {
     default_logger_raw()->trace(msg);

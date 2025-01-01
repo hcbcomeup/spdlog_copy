@@ -91,7 +91,7 @@ public:
 
 private:
     std::string pattern_;
-    std::string eol_;
+    std::string eol_;  // 结束符
     pattern_time_type pattern_time_type_;
     bool need_localtime_;
     std::tm cached_tm_;

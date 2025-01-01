@@ -51,6 +51,7 @@ class dynamic_arg_list {
   std::unique_ptr<node<>> head_;
 
  public:
+  // 从头节点动态插入  
   template <typename T, typename Arg> auto push(const Arg& arg) -> const T& {
     auto new_node = std::unique_ptr<typed_node<T>>(new typed_node<T>(arg));
     auto& value = new_node->value;

@@ -392,6 +392,7 @@ std::unique_ptr<T> make_unique(Args &&...args) {
 }
 #endif
 
+// 模板函数：类型转换函数，通过is_same判断，可以参考借鉴
 // to avoid useless casts (see https://github.com/nlohmann/json/issues/2893#issuecomment-889152324)
 template <typename T, typename U, enable_if_t<!std::is_same<T, U>::value, int> = 0>
 constexpr T conditional_static_cast(U value) {

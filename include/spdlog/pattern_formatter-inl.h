@@ -39,6 +39,7 @@ namespace details {
 // name & level pattern appender
 ///////////////////////////////////////////////////////////////////////
 
+// 带偏移位置属性
 class scoped_padder {
 public:
     scoped_padder(size_t wrapped_size, const padding_info &padinfo, memory_buf_t &dest)
@@ -86,6 +87,7 @@ private:
     string_view_t spaces_{"                                                                ", 64};
 };
 
+// 不带偏移位置属性
 struct null_scoped_padder {
     null_scoped_padder(size_t /*wrapped_size*/,
                        const padding_info & /*padinfo*/,
@@ -1005,6 +1007,7 @@ SPDLOG_INLINE std::tm pattern_formatter::get_time_(const details::log_msg &msg) 
     return details::os::gmtime(log_clock::to_time_t(msg.time));
 }
 
+// 根据设置，确定各个格式化
 template <typename Padder>
 SPDLOG_INLINE void pattern_formatter::handle_flag_(char flag, details::padding_info padding) {
     // process custom flags
@@ -1311,6 +1314,7 @@ SPDLOG_INLINE void pattern_formatter::compile_pattern_(const std::string &patter
                 formatters_.push_back(std::move(user_chars));
             }
 
+            // 确定偏移位置
             auto padding = handle_padspec_(++it, end);
 
             if (it != end) {

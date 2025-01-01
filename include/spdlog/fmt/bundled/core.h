@@ -318,6 +318,7 @@ namespace detail {
 // (void)var does not work on many Intel compilers.
 template <typename... T> FMT_CONSTEXPR void ignore_unused(const T&...) {}
 
+// 判断是否为编译时常量
 constexpr FMT_INLINE auto is_constant_evaluated(
     bool default_value = false) noexcept -> bool {
 // Workaround for incompatibility between libstdc++ consteval-based
@@ -594,6 +595,7 @@ enum class type {
 };
 
 // Maps core type T to the corresponding type enum constant.
+// 模板都没有被使用？
 template <typename T, typename Char>
 struct type_constant : std::integral_constant<type, type::custom_type> {};
 
@@ -889,6 +891,7 @@ template <typename T> class buffer {
   /** Appends data to the end of the buffer. */
   template <typename U> void append(const U* begin, const U* end);
 
+  // 注意数组越界
   template <typename Idx> FMT_CONSTEXPR auto operator[](Idx index) -> T& {
     return ptr_[index];
   }
@@ -1503,7 +1506,7 @@ using mapped_type_constant =
 enum { packed_arg_bits = 4 };
 // Maximum number of arguments with packed types.
 enum { max_packed_args = 62 / packed_arg_bits };
-enum : unsigned long long { is_unpacked_bit = 1ULL << 63 };
+enum : unsigned long long { is_unpacked58_bit = 1ULL << 63 };
 enum : unsigned long long { has_named_args_bit = 1ULL << 62 };
 
 template <typename Char, typename InputIt>
@@ -2008,6 +2011,7 @@ FMT_EXPORT using format_args = basic_format_args<format_context>;
 // in namespaces instead (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61414).
 // Additionally, if an underlying type is specified, older gcc incorrectly warns
 // that the type is too small. Both bugs are fixed in gcc 9.3.
+// 获取enum类型的底层数据类型
 #if FMT_GCC_VERSION && FMT_GCC_VERSION < 903
 #  define FMT_ENUM_UNDERLYING_TYPE(type)
 #else
@@ -2191,6 +2195,7 @@ FMT_CONSTEXPR auto parse_nonnegative_int(const Char*& begin, const Char* end,
              : error_value;
 }
 
+// 解析位置偏移(</>/^)
 FMT_CONSTEXPR inline auto parse_align(char c) -> align_t {
   switch (c) {
   case '<':

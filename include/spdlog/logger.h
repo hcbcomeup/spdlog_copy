@@ -72,6 +72,7 @@ public:
 
     logger(const logger &other);
     logger(logger &&other) SPDLOG_NOEXCEPT;
+    // 不引用，可直接拷贝构造后对该临时变量操作，缺点是如果class太大会占内存（临时）
     logger &operator=(logger other) SPDLOG_NOEXCEPT;
     void swap(spdlog::logger &other) SPDLOG_NOEXCEPT;
 
@@ -306,7 +307,7 @@ public:
 
 protected:
     std::string name_;
-    std::vector<sink_ptr> sinks_;
+    std::vector<sink_ptr> sinks_;   // 各个logger的模式
     spdlog::level_t level_{level::info};
     spdlog::level_t flush_level_{level::off};
     err_handler custom_err_handler_{nullptr};
@@ -360,6 +361,7 @@ protected:
     // log the given message (if the given log level is high enough),
     // and save backtrace (if backtrace is enabled).
     void log_it_(const details::log_msg &log_msg, bool log_enabled, bool traceback_enabled);
+    // async_logger可重载
     virtual void sink_it_(const details::log_msg &msg);
     virtual void flush_();
     void dump_backtrace_();

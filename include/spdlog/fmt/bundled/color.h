@@ -411,16 +411,22 @@ template <typename Char> struct ansi_color_escape {
   }
 };
 
+// \x1b 是 ESC 字符，表示转义序列的开始
+// [38;2; 表示设置文字颜色（前景色），并采用 RGB 模式
+// R;G;B 是红色、绿色和蓝色的数值，每个值的范围是 0 到 255
 template <typename Char>
 FMT_CONSTEXPR auto make_foreground_color(detail::color_type foreground) noexcept
     -> ansi_color_escape<Char> {
   return ansi_color_escape<Char>(foreground, "\x1b[38;2;");
 }
 
+// \x1b 是 ESC 字符，表示转义序列的开始
+// [48;2; 指定的是设置背景色，并使用 RGB 三原色模式
+// R;G;B 是红色、绿色和蓝色的数值，每个值的范围是 0 到 255
 template <typename Char>
 FMT_CONSTEXPR auto make_background_color(detail::color_type background) noexcept
     -> ansi_color_escape<Char> {
-  return ansi_color_escape<Char>(background, "\x1b[48;2;");
+  return ansi_color_escape<Char>(background, "\x1b[48;2;");  
 }
 
 template <typename Char>
@@ -429,6 +435,7 @@ FMT_CONSTEXPR auto make_emphasis(emphasis em) noexcept
   return ansi_color_escape<Char>(em);
 }
 
+// 0m 代表重置所有的终端属性
 template <typename Char> inline void reset_color(buffer<Char>& buffer) {
   auto reset_color = string_view("\x1b[0m");
   buffer.append(reset_color.begin(), reset_color.end());
